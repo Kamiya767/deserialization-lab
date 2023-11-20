@@ -27,17 +27,22 @@ app.get("/request", (req, res) => {
 
 app.post("/request", (req, res, next) => {
   try {
-    var item = serialize.unserialize(req.body);
-    res.send(
-      `Request ${chalk.red(item["id"])} received with description ${chalk.red(
-        item["description"]
-      )}`
-    );
+    var item = req.body; 
+    if (item && item.id && item.description) { 
+      res.send(
+        `Request ${chalk.red(item.id)} received with description ${chalk.red(
+          item.description
+        )}`
+      );
+    } else {
+      throw new Error("Invalid request format");
+    }
   } catch (err) {
     res.send("No valid request received");
     console.log(err);
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${chalk.green(PORT)}`);
